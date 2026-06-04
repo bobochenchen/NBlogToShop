@@ -12,19 +12,19 @@
 				<div class="ui container">
 					<div class="ui stackable grid">
 						<!--左侧-->
-						<div class="three wide column m-mobile-hide">
-							<Introduction :class="{'m-display-none':focusMode}"/>
+						<div class="three wide column m-mobile-hide" v-show="!focusMode">
+							<Introduction/>
 						</div>
 						<!--中间-->
-						<div class="ten wide column">
+						<div :class="[focusMode ? 'sixteen' : 'ten', 'wide column']">
 							<keep-alive include="Home">
 								<router-view/>
 							</keep-alive>
 						</div>
 						<!--右侧-->
-						<div class="three wide column m-mobile-hide">
-							<RandomBlog :randomBlogList="randomBlogList" :class="{'m-display-none':focusMode}"/>
-							<Tags :tagList="tagList" :class="{'m-display-none':focusMode}"/>
+						<div class="three wide column m-mobile-hide" v-show="!focusMode">
+							<RandomBlog :randomBlogList="randomBlogList"/>
+							<Tags :tagList="tagList"/>
 							<!--只在文章页面显示目录-->
 							<Tocbot v-if="$route.name==='blog'"/>
 						</div>
@@ -36,10 +36,7 @@
 		<!--私密文章密码对话框-->
 		<BlogPasswordDialog/>
 
-		<!--APlayer-->
-		<div class="m-mobile-hide">
-			<meting-js :server="siteInfo.playlistServer" :id="siteInfo.playlistId" type="playlist" fixed="true" theme="#25CCF7" v-if="siteInfo.playlistServer && siteInfo.playlistId"></meting-js>
-		</div>
+
 		<!--回到顶部-->
 		<el-backtop style="box-shadow: none;background: none;z-index: 9999;">
 			<img src="/img/paper-plane.png" style="width: 40px;height: 40px;">

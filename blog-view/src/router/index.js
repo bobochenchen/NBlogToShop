@@ -19,7 +19,7 @@ const routes = [
 				path: '/home',
 				name: 'home',
 				component: () => import('@/views/home/Home'),
-				meta: {title: '首页'}
+				meta: {title: ''}
 			},
 			{
 				path: '/archives',
@@ -55,13 +55,13 @@ const routes = [
 				path: '/friends',
 				name: 'friends',
 				component: () => import('@/views/friends/Friends'),
-				meta: {title: '友人帐'}
+				meta: {title: '友情链接'}
 			},
 			{
 				path: '/about',
 				name: 'about',
 				component: () => import('@/views/about/About'),
-				meta: {title: '关于我'}
+				meta: {title: '关于我们'}
 			}
 		]
 	}

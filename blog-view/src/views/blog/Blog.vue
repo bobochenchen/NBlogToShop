@@ -8,34 +8,9 @@
 				<div class="ui grid m-margin-lr">
 					<!--标题-->
 					<div class="row m-padded-tb-small">
-						<h2 class="ui header m-center">{{ blog.title }}</h2>
-					</div>
-					<!--文章简要信息-->
-					<div class="row m-padded-tb-small">
-						<div class="ui horizontal link list m-center">
-							<div class="item m-datetime">
-								<i class="small calendar icon"></i><span>{{ blog.createTime | dateFormat('YYYY-MM-DD') }}</span>
-							</div>
-							<div class="item m-views">
-								<i class="small eye icon"></i><span>{{ blog.views }}</span>
-							</div>
-							<div class="item m-common-black">
-								<i class="small pencil alternate icon"></i><span>字数≈{{ blog.words }}字</span>
-							</div>
-							<div class="item m-common-black">
-								<i class="small clock icon"></i><span>阅读时长≈{{ blog.readTime }}分</span>
-							</div>
-							<a class="item m-common-black" @click.prevent="bigFontSize=!bigFontSize">
-								<div data-inverted="" data-tooltip="点击切换字体大小" data-position="top center">
-									<i class="font icon"></i>
-								</div>
-							</a>
-							<a class="item m-common-black" @click.prevent="changeFocusMode">
-								<div data-inverted="" data-tooltip="专注模式" data-position="top center">
-									<i class="book icon"></i>
-								</div>
-							</a>
-						</div>
+						<h2 class="ui header m-center">
+							{{ blog.title }}
+						</h2>
 					</div>
 					<!--分类-->
 					<router-link :to="`/category/${blog.category.name}`" class="ui orange large ribbon label" v-if="blog.category">
@@ -75,7 +50,6 @@
 				</li>
 				<li>发表时间：{{ blog.createTime | dateFormat('YYYY-MM-DD HH:mm') }}</li>
 				<li>最后修改：{{ blog.updateTime | dateFormat('YYYY-MM-DD HH:mm') }}</li>
-				<li>本站点采用<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"> 署名 4.0 国际 (CC BY 4.0) </a>创作共享协议。可自由转载、引用，并且允许商业性使用。但需署名作者且注明文章出处。</li>
 			</ul>
 		</div>
 		<!--评论-->
@@ -139,6 +113,7 @@
 			}
 		},
 		created() {
+			this.$store.commit(SET_FOCUS_MODE, true)
 			this.getBlog()
 		},
 		methods: {
@@ -165,9 +140,6 @@
 					this.msgError("请求失败")
 				})
 			},
-			changeFocusMode() {
-				this.$store.commit(SET_FOCUS_MODE, !this.focusMode)
-			}
 		}
 	}
 </script>

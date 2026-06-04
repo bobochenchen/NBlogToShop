@@ -5,27 +5,27 @@
 				<h3 class="ui header item m-blue">{{ blogName }}</h3>
 			</router-link>
 			<router-link to="/home" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='home'}">
-				<i class="home icon"></i>首页
-			</router-link>
-			<el-dropdown trigger="click" @command="categoryRoute">
-				<span class="el-dropdown-link item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='category'}">
-					<i class="idea icon"></i>分类<i class="caret down icon"></i>
-				</span>
-				<el-dropdown-menu slot="dropdown">
-					<el-dropdown-item :command="category.name" v-for="(category,index) in categoryList" :key="index">{{ category.name }}</el-dropdown-item>
-				</el-dropdown-menu>
-			</el-dropdown>
-			<router-link to="/archives" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='archives'}">
-				<i class="clone icon"></i>归档
-			</router-link>
+					<i class="home icon"></i>首页
+				</router-link>
+				<router-link to="/archives" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='archives'}">
+					<i class="clone icon"></i>产品日历
+				</router-link>
+				<el-dropdown trigger="click" @command="categoryRoute">
+					<span class="el-dropdown-link item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='category'}">
+						<i class="idea icon"></i>分类<i class="caret down icon"></i>
+					</span>
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item :command="category.name" v-for="(category,index) in categoryList" :key="index">{{ category.name }}</el-dropdown-item>
+					</el-dropdown-menu>
+				</el-dropdown>
 			<router-link to="/moments" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='moments'}">
 				<i class="comment alternate outline icon"></i>动态
 			</router-link>
 			<router-link to="/friends" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='friends'}">
-				<i class="users icon"></i>友人帐
+				<i class="users icon"></i>友情链接
 			</router-link>
 			<router-link to="/about" class="item" :class="{'m-mobile-hide': mobileHide,'active':$route.name==='about'}">
-				<i class="info icon"></i>关于我
+				<i class="info icon"></i>关于我们
 			</router-link>
 			<el-autocomplete v-model="queryString" :fetch-suggestions="debounceQuery" placeholder="Search..."
 			                 class="right item m-search" :class="{'m-mobile-hide': mobileHide}"
@@ -150,6 +150,20 @@
 
 	.ui.fixed.menu {
 		transition: .3s ease-out;
+	}
+
+	/* 导航栏整体尺寸加大 */
+	.ui.fixed.menu .item {
+		font-size: 16px !important;
+		padding: 0.928571em 1.2em !important;
+	}
+
+	.ui.fixed.menu .ui.header.item {
+		font-size: 1.8rem !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+		display: flex !important;
+		align-items: center !important;
 	}
 
 	.ui.inverted.pointing.menu.transparent {

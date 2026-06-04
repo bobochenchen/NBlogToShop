@@ -5,8 +5,9 @@
   "author": "Naccl <i@naccl.top>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --host 0.0.0.0 --allowed-hosts all"
+
   },
   "dependencies": {
     "axios": "0.24.0",
