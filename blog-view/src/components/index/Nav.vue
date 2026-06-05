@@ -167,16 +167,27 @@
 	}
 
 	.ui.inverted.pointing.menu.transparent {
-		background: transparent !important;
+		background: rgba(27, 28, 29, 0.75) !important;
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+	}
+
+	.ui.inverted.pointing.menu.transparent .item {
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+
+	.ui.inverted.pointing.menu.transparent .active.item {
+		background: rgba(255, 255, 255, 0.1) !important;
 	}
 
 	.ui.inverted.pointing.menu.transparent .active.item:after {
-		background: transparent !important;
+		background: rgba(255, 255, 255, 0.6) !important;
 		transition: .3s ease-out;
 	}
 
 	.ui.inverted.pointing.menu.transparent .active.item:hover:after {
-		background: transparent !important;
+		background: rgba(255, 255, 255, 0.8) !important;
 	}
 
 	.el-dropdown-link {

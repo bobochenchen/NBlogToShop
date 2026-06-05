@@ -1,10 +1,24 @@
 <template>
 	<header ref="header">
-		<div class="view">
-			<img ref="imgbg1" :src="defaultSettings.bg1" style="display: none;">
-			<div class="bg1" :style="{backgroundImage:'url('+defaultSettings.bg1+')'}"></div>
-			<div class="bg2" :style="{backgroundImage:'url('+defaultSettings.bg2+')'}"></div>
-			<div class="bg3" :style="{backgroundImage:'url('+defaultSettings.bg3+')'}" v-show="loaded"></div>
+		<div class="carousel-container">
+			<transition-group name="carousel-fade" tag="div" class="carousel-slides">
+				<div
+					v-for="(img, index) in images"
+					:key="index"
+					v-show="index === currentIndex"
+					class="carousel-slide"
+					:style="{backgroundImage:'url('+img+')'}"
+				></div>
+			</transition-group>
+			<!-- 指示器 -->
+			<div class="carousel-dots" v-if="images.length > 1">
+				<span
+					v-for="(img, index) in images"
+					:key="index"
+					:class="['dot', { active: index === currentIndex }]"
+					@click="goTo(index)"
+				></span>
+			</div>
 		</div>
 		<div class="text-malfunction" :data-word="defaultSettings.malfunctionText">
 			{{ defaultSettings.malfunctionText }}
@@ -26,8 +40,11 @@
 		name: "Header",
 		data() {
 			return {
-				loaded: false,
-				defaultSettings
+				defaultSettings,
+				images: [],
+				currentIndex: 0,
+				timer: null,
+				interval: 5000
 			}
 		},
 		computed: {
@@ -38,32 +55,57 @@
 				this.setHeaderHeight()
 			}
 		},
+		created() {
+			this.loadImages()
+		},
 		mounted() {
-			/**
-			 * 因为bg3.jpg比较小，通常会比bg1.jpg先加载，显示出来会有一瞬间bg1显示一半，bg3显示一半，为了解决这个问题，增加这个判断，让bg1加载完毕后再显示bg3
-			 * HTML中使用img标签的原因：我个人想用div作为图片的载体，而只有img标签有图片加载完毕的onload回调，所以用一个display: none的img人柱力来加载图片
-			 * 当img中的src加载完毕后，会把图片缓存到浏览器，后续在div中用background url的形式将直接从浏览器中取出图片，不会下载两次图片
-			 */
-			this.$refs.imgbg1.onload = () => {
-				this.loaded = true
-			}
 			this.setHeaderHeight()
-			let startingPoint
-			const header = this.$refs.header
-			header.addEventListener('mouseenter', (e) => {
-				startingPoint = e.clientX
-			})
-			header.addEventListener('mouseout', (e) => {
-				header.classList.remove('moving')
-				header.style.setProperty('--percentage', 0.5)
-			})
-			header.addEventListener('mousemove', (e) => {
-				let percentage = (e.clientX - startingPoint) / window.outerWidth + 0.5
-				header.style.setProperty('--percentage', percentage)
-				header.classList.add('moving')
-			})
+			this.startAutoPlay()
+		},
+		beforeDestroy() {
+			this.stopAutoPlay()
 		},
 		methods: {
+			// 加载 homepage-imgs 目录下的所有图片
+			loadImages() {
+				const imgNames = [
+					'16926.PNG',
+					'16927.JPG',
+					'16928.JPG',
+					'16929.JPG',
+					'16930.PNG',
+					'16931.JPG',
+					'16932.JPG',
+					'16933.JPG',
+					'16934.JPG'
+				]
+				this.images = imgNames.map(name => `/img/homepage-imgs/${name}`)
+			},
+			// 自动轮播
+			startAutoPlay() {
+				if (this.images.length <= 1) return
+				this.stopAutoPlay()
+				this.timer = setInterval(() => {
+					this.next()
+				}, this.interval)
+			},
+			stopAutoPlay() {
+				if (this.timer) {
+					clearInterval(this.timer)
+					this.timer = null
+				}
+			},
+			next() {
+				this.currentIndex = (this.currentIndex + 1) % this.images.length
+			},
+			prev() {
+				this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length
+			},
+			goTo(index) {
+				this.currentIndex = index
+				// 点击指示器后重置自动轮播计时
+				this.startAutoPlay()
+			},
 			//根据可视窗口高度，动态改变首图大小
 			setHeaderHeight() {
 				this.$refs.header.style.height = this.clientSize.clientHeight + 'px'
@@ -78,53 +120,73 @@
 
 <style scoped>
 	header {
-		--percentage: 0.5;
 		user-select: none;
+		position: relative;
+		overflow: hidden;
 	}
 
-	.view {
+	.carousel-container {
 		position: absolute;
 		top: 0;
 		right: 0;
 		bottom: 0;
 		left: 0;
-		display: flex;
-		justify-content: center;
-		transform: translatex(calc(var(--percentage) * 100px));
 	}
 
-	.view div {
-		background-position: center center;
-		background-size: cover;
-		position: absolute;
-		width: 110%;
+	.carousel-slides {
+		position: relative;
+		width: 100%;
 		height: 100%;
 	}
 
-	.view .bg1 {
-		z-index: 10;
-		opacity: calc(1 - (var(--percentage) - 0.5) / 0.5);
+	.carousel-slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-position: center center;
+		background-size: cover;
 	}
 
-	.view .bg2 {
-		z-index: 20;
-		opacity: calc(1 - (var(--percentage) - 0.25) / 0.25);
+	/* 淡入淡出过渡 */
+	.carousel-fade-enter-active,
+	.carousel-fade-leave-active {
+		transition: opacity 1s ease;
 	}
 
-	.view .bg3 {
-		left: -10%;
+	.carousel-fade-enter,
+	.carousel-fade-leave-to {
+		opacity: 0;
 	}
 
-	header .view,
-	header .bg1,
-	header .bg2 {
-		transition: .2s all ease-in;
+	/* 指示器 */
+	.carousel-dots {
+		position: absolute;
+		bottom: 180px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 90;
+		display: flex;
+		gap: 10px;
 	}
 
-	header.moving .view,
-	header.moving .bg1,
-	header.moving .bg2 {
-		transition: none;
+	.dot {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.5);
+		cursor: pointer;
+		transition: background 0.3s, transform 0.3s;
+	}
+
+	.dot:hover {
+		background: rgba(255, 255, 255, 0.8);
+	}
+
+	.dot.active {
+		background: #fff;
+		transform: scale(1.2);
 	}
 
 	.text-malfunction {
