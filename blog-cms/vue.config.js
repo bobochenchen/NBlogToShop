@@ -36,6 +36,12 @@ module.exports = {
 			warnings: false,
 			errors: true
 		},
+		proxy: {
+			'/api/admin/': {
+				target: 'http://localhost:8090',
+				changeOrigin: true
+			}
+		}
 	},
 	configureWebpack: {
 		// provide the app's title in webpack's name field, so that

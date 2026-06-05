@@ -3,6 +3,12 @@ module.exports = {
 		disableHostCheck: true,
 		sockHost: 'localhost',
 		port: 8082,
+		proxy: {
+			'/api/': {
+				target: 'http://localhost:8090',
+				changeOrigin: true
+			}
+		}
 	},
 	configureWebpack: {
 		resolve: {
