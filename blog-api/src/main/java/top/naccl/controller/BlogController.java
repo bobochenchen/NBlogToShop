@@ -67,11 +67,11 @@ public class BlogController {
 				try {
 					String subject = JwtUtils.getTokenBody(jwt).getSubject();
 					if (subject.startsWith(JwtConstants.ADMIN_PREFIX)) {
-						//博主身份Token
+						//店家身份Token
 						String username = subject.replace(JwtConstants.ADMIN_PREFIX, "");
 						User admin = (User) userService.loadUserByUsername(username);
 						if (admin == null) {
-							return Result.create(403, "博主身份Token已失效，请重新登录！");
+							return Result.create(403, "店家身份Token已失效，请重新登录！");
 						}
 					} else {
 						//经密码验证后的Token
